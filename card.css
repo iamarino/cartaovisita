@@ -1,0 +1,428 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  padding: 16px;
+}
+
+.card {
+  width: 100%;
+  max-width: 390px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,.22);
+  background: #fff;
+  animation: fadeUp .5s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ── */
+.card-header {
+  background: var(--primary, #0d5c2e);
+  background: linear-gradient(160deg, var(--primary, #0d5c2e) 0%, var(--accent, #1eb854) 100%);
+  padding: 36px 24px 80px;
+  text-align: center;
+  position: relative;
+}
+
+/* ── Full-card background image mode ──
+   Two-layer background: overlay on top, photo behind.
+   All inner sections become transparent so the image shows everywhere. */
+.card.bg-full-image {
+  background-image:
+    var(--bg-overlay-color, linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45))),
+    var(--bg-image, none);
+  background-size: 100% 100%, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+}
+
+.card.bg-full-image .card-header   { background: transparent; }
+.card.bg-full-image .card-identity { background: transparent; }
+.card.bg-full-image .icons-grid    { background: transparent; }
+.card.bg-full-image .card-actions  { background: transparent; }
+
+.card.bg-full-image .card-name {
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0,0,0,.5);
+}
+
+.card.bg-full-image .icon-label {
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 1px 4px rgba(0,0,0,.5);
+}
+
+.card.bg-full-image .divider {
+  background: rgba(255,255,255,.3) !important;
+  opacity: 1;
+}
+
+.card.bg-full-image .btn-action.secondary {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  border-color: rgba(255,255,255,.45);
+  backdrop-filter: blur(6px);
+}
+
+.card.bg-full-image .card-footer {
+  background: rgba(0,0,0,.28);
+}
+
+.card-logo {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+  margin-bottom: 4px;
+}
+
+/* ── Photo ── */
+.photo-wrap {
+  position: absolute;
+  left: 50%;
+  bottom: -52px;
+  transform: translateX(-50%);
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  overflow: hidden;
+  background: rgba(255,255,255,.15);
+  box-shadow: 0 4px 20px rgba(0,0,0,.2);
+}
+
+.photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  color: rgba(255,255,255,.6);
+  background: rgba(255,255,255,.15);
+}
+
+/* ── Identity ── */
+.card-identity {
+  padding: 64px 24px 20px;
+  text-align: center;
+  background: #fff;
+}
+
+.card-name {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--name-color, #1a1a1a);
+  letter-spacing: .01em;
+}
+
+.card-profession {
+  font-size: .88rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.card-crm {
+  font-size: .75rem;
+  font-weight: 500;
+  color: var(--crm-color, #999);
+  margin-top: 4px;
+  letter-spacing: .04em;
+}
+
+/* ── Divider ── */
+.divider {
+  height: 2px;
+  margin: 0 24px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--primary, #0d5c2e), var(--accent, #1eb854));
+  opacity: .25;
+}
+
+/* ── Icon grid ── */
+.icons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px 12px;
+  padding: 24px 20px 20px;
+  background: #fff;
+}
+
+.icon-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  background: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.icon-btn:active .icon-circle { transform: scale(.93); }
+
+.icon-circle {
+  width: 62px;
+  height: 62px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.45rem;
+  color: #fff;
+  transition: transform .15s ease, box-shadow .15s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,.18);
+  background: linear-gradient(135deg, var(--primary, #0d5c2e), var(--accent, #1eb854));
+}
+
+.icon-btn:hover .icon-circle {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.22);
+}
+
+.icon-label {
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--label-color, #555);
+  text-align: center;
+  letter-spacing: .03em;
+}
+
+/* ── Action buttons ── */
+.card-actions {
+  display: flex;
+  gap: 10px;
+  padding: 4px 20px 22px;
+  background: #fff;
+}
+
+.btn-action {
+  flex: 1;
+  padding: 12px 8px;
+  border-radius: 12px;
+  border: 2px solid var(--primary, #0d5c2e);
+  font-size: .8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  letter-spacing: .03em;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-action.primary {
+  background: linear-gradient(135deg, var(--primary, #0d5c2e), var(--accent, #1eb854));
+  color: #fff;
+  border-color: transparent;
+}
+
+.btn-action.secondary {
+  background: #fff;
+  color: var(--primary, #0d5c2e);
+}
+
+.btn-action:hover { filter: brightness(1.08); }
+.btn-action:active { filter: brightness(.95); }
+
+/* ── Footer ── */
+.card-footer {
+  background: var(--primary, #0d5c2e);
+  padding: 12px;
+  text-align: center;
+  font-size: .7rem;
+  color: rgba(255,255,255,.7);
+  letter-spacing: .05em;
+}
+
+/* ════════════════════════════════════════
+   MODELO ELEGANTE
+   ════════════════════════════════════════ */
+.card.model-elegant {
+  background: var(--eg-bg, linear-gradient(160deg, #f5e6d8 0%, #e8d0bf 60%, #dfc4af 100%));
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* When full-image bg is combined with elegant model */
+.card.model-elegant.bg-full-image { background-image: var(--bg-overlay-color), var(--bg-image); }
+
+/* ── Header: logo + identity ── */
+.eg-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 28px 24px 12px;
+}
+
+.eg-logo {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary, #3d6b6b);
+  font-size: 2rem;
+  opacity: .85;
+}
+
+.eg-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.eg-identity { flex: 1; }
+
+.eg-identity .card-name {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--name-color, #2a1f1a);
+  line-height: 1.2;
+}
+
+.eg-identity .card-profession {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--profession-color, var(--primary, #3d6b6b));
+  margin-top: 3px;
+}
+
+.eg-identity .card-crm {
+  font-size: .7rem;
+  color: var(--crm-color, #a08878);
+  margin-top: 2px;
+}
+
+/* ── Photo section ── */
+.eg-photo-section {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 16px;
+}
+
+.eg-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 160px;
+  color: var(--primary, #3d6b6b);
+  opacity: .06;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.eg-photo-ring {
+  width: 148px;
+  height: 148px;
+  border-radius: 50%;
+  border: 3px solid var(--accent, #6ba3a3);
+  padding: 5px;
+  position: relative;
+  z-index: 1;
+  background: rgba(255,255,255,.4);
+}
+
+.eg-photo-ring img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.eg-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  color: var(--primary, #3d6b6b);
+  opacity: .4;
+  background: rgba(255,255,255,.3);
+}
+
+/* ── Tagline ── */
+.eg-tagline {
+  padding: 4px 28px 20px;
+  text-align: center;
+  font-size: .95rem;
+  line-height: 1.55;
+  color: var(--name-color, #2a1f1a);
+  font-style: italic;
+}
+
+/* ── Pill buttons ── */
+.eg-buttons {
+  padding: 0 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-elegant {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  transition: filter .15s, transform .1s;
+  cursor: pointer;
+  border: 2px solid var(--primary, #3d6b6b);
+  color: var(--label-color, var(--primary, #3d6b6b));
+  background: rgba(255,255,255,.45);
+  backdrop-filter: blur(4px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-elegant.cta {
+  background: var(--primary, #3d6b6b);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 18px rgba(0,0,0,.18);
+}
+
+.btn-elegant i { font-size: 1rem; flex-shrink: 0; }
+.btn-elegant:hover { filter: brightness(1.07); }
+.btn-elegant:active { transform: scale(.97); }
+
+/* ── Elegant + bg-full-image overrides ── */
+.card.model-elegant.bg-full-image .eg-identity .card-name { color: var(--name-color, #fff); text-shadow: 0 1px 6px rgba(0,0,0,.4); }
+.card.model-elegant.bg-full-image .eg-identity .card-profession { color: var(--profession-color, var(--accent, #6ba3a3)); }
+.card.model-elegant.bg-full-image .eg-identity .card-crm { color: var(--crm-color, rgba(255,255,255,.7)); }
+.card.model-elegant.bg-full-image .eg-tagline { color: var(--name-color, rgba(255,255,255,.9)); text-shadow: 0 1px 4px rgba(0,0,0,.3); }
+.card.model-elegant.bg-full-image .btn-elegant { background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.5); color: #fff; }
+.card.model-elegant.bg-full-image .btn-elegant.cta { background: var(--primary, #3d6b6b); border-color: transparent; }

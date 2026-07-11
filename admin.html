@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Cartão de Visita Digital</title>
+  <link rel="stylesheet" href="assets/admin.css">
+  <link rel="stylesheet" href="assets/card.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div>
+    <h1><i class="fa-solid fa-sliders"></i> Painel Admin</h1>
+    <p>Edite os dados e exporte o config.json para atualizar o cartão</p>
+  </div>
+  <button class="btn-export" id="btnExport">
+    <i class="fa-solid fa-file-arrow-down"></i> Exportar config.json
+  </button>
+</div>
+
+<div class="layout">
+
+  <!-- Left: form -->
+  <div class="form-col">
+
+    <!-- Model selector -->
+    <div class="section">
+      <div class="section-title"><i class="fa-solid fa-layer-group"></i> Modelo do Cartão</div>
+      <div style="display:flex;gap:10px">
+        <label class="model-option" id="modelOptClassic">
+          <input type="radio" name="modelType" value="classic" checked>
+          <span class="model-option-box">
+            <span class="model-thumb classic-thumb">
+              <span></span><span></span>
+              <span class="icons-row"><b></b><b></b><b></b></span>
+            </span>
+            <strong>Clássico</strong>
+            <small>Grid de ícones</small>
+          </span>
+        </label>
+        <label class="model-option" id="modelOptElegant">
+          <input type="radio" name="modelType" value="elegant">
+          <span class="model-option-box">
+            <span class="model-thumb elegant-thumb">
+              <span class="et-circle"></span>
+              <span></span>
+              <span class="et-btn"></span>
+            </span>
+            <strong>Elegante</strong>
+            <small>Botões em lista</small>
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Identity -->
+    <div class="section">
+      <div class="section-title"><i class="fa-solid fa-id-card"></i> Identidade</div>
+      <div class="field">
+        <label>Nome completo</label>
+        <input type="text" id="fName" placeholder="Ex: João da Silva">
+      </div>
+      <div class="field">
+        <label>Profissão / Cargo</label>
+        <input type="text" id="fProfession" placeholder="Ex: Corretor de Imóveis">
+      </div>
+      <div class="field">
+        <label>CRM / Registro profissional <span style="font-weight:400;color:#aaa">(opcional)</span></label>
+        <input type="text" id="fCrm" placeholder="Ex: CRM-SP 123456 • CRECI 45678">
+      </div>
+      <div class="field" id="taglineField" style="display:none">
+        <label>Frase / Tagline <span style="font-weight:400;color:#aaa">(modelo elegante)</span></label>
+        <input type="text" id="fTagline" placeholder="Ex: A terapia é o seu espaço para ser e crescer.">
+      </div>
+    </div>
+
+    <!-- Photo -->
+    <div class="section">
+      <div class="section-title"><i class="fa-solid fa-image"></i> Foto de Perfil</div>
+      <div class="photo-upload-row">
+        <div class="photo-preview" id="photoPreview">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <div class="photo-inputs">
+          <div class="field" style="margin-bottom:8px">
+            <label>URL ou caminho da foto</label>
+            <input type="text" id="fPhoto" placeholder="assets/foto.jpg ou https://...">
+          </div>
+          <label class="btn-upload">
+            <i class="fa-solid fa-upload"></i> Usar foto do computador (incorpora no arquivo)
+            <input type="file" accept="image/*" id="photoFile" style="display:none">
+          </label>
+        </div>
+      </div>
+      <p style="font-size:.74rem;color:#888;margin-top:10px">
+        <i class="fa-solid fa-circle-info"></i>
+        Para hospedar no GitHub, coloque a foto na pasta <strong>assets/</strong> e escreva <code>assets/suafoto.jpg</code> acima. Ou use "Usar foto do computador" para embutir diretamente no arquivo (sem upload separado).
+      </p>
+    </div>
+
+    <!-- Theme -->
+    <div class="section">
+      <div class="section-title"><i class="fa-solid fa-palette"></i> Cores</div>
+      <div class="color-row">
+        <div class="color-field">
+          <label>Cor principal</label>
+          <div class="color-wrap">
+            <input type="color" id="fPrimary" value="#0d5c2e">
+            <input type="text"  id="fPrimaryHex" value="#0d5c2e" maxlength="7">
+          </div>
+        </div>
+        <div class="color-field">
+          <label>Cor de destaque</label>
+          <div class="color-wrap">
+            <input type="color" id="fAccent" value="#1eb854">
+            <input type="text"  id="fAccentHex" value="#1eb854" maxlength="7">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Font colors -->
+    <div class="section">
+      <div class="section-title"><i class="fa-solid fa-font"></i> Cores das Fontes</div>
+      <div class="color-row" style="flex-wrap:wrap;gap:12px">
+        <div class="color-field" style="min-width:140px">
+          <label>Nome</label>
+          <div class="color-wrap">
+            <input type="color" id="fNameColor" value="#1a1a1a">
+            <input type="text"  id="fNameColorHex" value="#1a1a1a" maxlength="7">
+          </div>
+        </div>
+        <div class="color-field" style="min-width:140px">
+          <label>Profissão</label>
+          <div class="color-wrap">
+            <input type="color" id="fProfColor" value="#1eb854">
+            <input type="text"  id="fProfColorHex" value="#1eb854" maxlength="7">
+          </div>
+        </div>
+        <div class="color-field" style="min-width:140px">
+          <label>CRM</label>
+          <div class="color-wrap">
+            <input type="color" id="fCrmColor" value="#999999">
+            <input type="text"  id="fCrmColorHex" value="#999999" maxlength="7">
+          </div>
+        </div>
+        <div class="color-field" style="min-width:140px">
+          <label>Labels / Botões</label>
+          <div class="color-wrap">
+            <input type="color" id="fLabelColor" value="#555555">
+            <input type="text"  id="fLabelColorHex" value="#555555" maxlength="7">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Background -->
+    <div class="section">
+      <div class="section-title"><i class="fa-solid fa-image"></i> Fundo do Cartão</div>
+
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <label class="bg-option" id="bgOptGradient">
+          <input type="radio" name="bgType" value="gradient" checked>
+          <span class="bg-option-box">
+            <i class="fa-solid fa-swatchbook"></i>
+            <strong>Gradiente</strong>
+            <small>Usa as cores definidas acima</small>
+          </span>
+        </label>
+        <label class="bg-option" id="bgOptImage">
+          <input type="radio" name="bgType" value="image">
+          <span class="bg-option-box">
+            <i class="fa-solid fa-image"></i>
+            <strong>Imagem</strong>
+            <small>Foto de fundo personalizada</small>
+          </span>
+        </label>
+      </div>
+
+      <div id="bgImageControls" style="display:none">
+        <div class="field">
+          <label>URL ou caminho da imagem de fundo</label>
+          <input type="text" id="fBgUrl" placeholder="https://... ou assets/fundo.jpg">
+        </div>
+        <label class="btn-upload" style="margin-bottom:12px">
+          <i class="fa-solid fa-upload"></i> Usar imagem do computador (incorpora no arquivo)
+          <input type="file" accept="image/*" id="bgFile" style="display:none">
+        </label>
+        <div class="field">
+          <label>Escurecimento do fundo: <strong id="overlayLabel">45%</strong></label>
+          <input type="range" id="fOverlay" min="0" max="85" value="45"
+                 style="width:100%;accent-color:var(--acc)">
+          <small style="color:#888;font-size:.72rem">Aumentar deixa o texto mais legível sobre a imagem</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div class="section">
+      <div class="section-title"><i class="fa-solid fa-link"></i> Links e Redes Sociais</div>
+      <div id="linksContainer"></div>
+    </div>
+
+  </div>
+
+  <!-- Right: preview -->
+  <div class="preview-col">
+    <p class="preview-title"><i class="fa-solid fa-mobile-screen"></i> Pré-visualização</p>
+    <div class="preview-shell">
+      <div class="preview-screen">
+        <!-- Inline card preview -->
+        <div id="previewCard" class="card" style="max-width:100%;border-radius:0;box-shadow:none;animation:none"></div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:.74rem;color:#999;margin-top:12px">
+      A pré-visualização atualiza em tempo real
+    </p>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Icon metadata ──
+const ICON_META = {
+  whatsapp:  { icon: 'fa-brands fa-whatsapp',    label: 'WhatsApp',  placeholder: '+5511999999999' },
+  phone:     { icon: 'fa-solid fa-phone',         label: 'Telefone',  placeholder: '+5511999999999' },
+  location:  { icon: 'fa-solid fa-location-dot',  label: 'Endereço',  placeholder: 'Rua X, 100, Cidade - UF' },
+  email:     { icon: 'fa-solid fa-envelope',      label: 'E-mail',    placeholder: 'voce@email.com' },
+  website:   { icon: 'fa-solid fa-globe',         label: 'Site',      placeholder: 'https://seusite.com.br' },
+  instagram: { icon: 'fa-brands fa-instagram',    label: 'Instagram', placeholder: 'seuusuario (sem @)' },
+  linkedin:  { icon: 'fa-brands fa-linkedin-in',  label: 'LinkedIn',  placeholder: 'https://linkedin.com/in/voce' },
+  facebook:  { icon: 'fa-brands fa-facebook-f',   label: 'Facebook',  placeholder: 'https://facebook.com/voce' },
+  youtube:   { icon: 'fa-brands fa-youtube',      label: 'YouTube',   placeholder: 'https://youtube.com/@canal' },
+  tiktok:    { icon: 'fa-brands fa-tiktok',       label: 'TikTok',    placeholder: 'seuusuario (sem @)' },
+};
+
+const ICON_HREF = {
+  whatsapp:  v => `https://wa.me/${v.replace(/\D/g,'')}`,
+  phone:     v => `tel:${v}`,
+  location:  v => `https://maps.google.com/?q=${encodeURIComponent(v)}`,
+  email:     v => `mailto:${v}`,
+  website:   v => v,
+  instagram: v => `https://instagram.com/${v.replace('@','')}`,
+  linkedin:  v => v,
+  facebook:  v => v,
+  youtube:   v => v,
+  tiktok:    v => `https://tiktok.com/@${v.replace('@','')}`,
+};
+
+const CTA_TYPES = new Set(['whatsapp', 'phone']);
+
+// ── State ──
+let config = {
+  name: '', profession: '', crm: '', tagline: '', model: 'classic', photo: '',
+  theme: { primaryColor: '#0d5c2e', accentColor: '#1eb854', textColor: '#ffffff' },
+  colors: { nameColor: '#1a1a1a', professionColor: '#1eb854', crmColor: '#999999', labelColor: '#555555' },
+  background: { type: 'gradient', imageUrl: '', overlayOpacity: 0.45 },
+  links: Object.keys(ICON_META).map(type => ({
+    type, label: ICON_META[type].label, value: '', visible: ['whatsapp','phone','email','instagram'].includes(type)
+  }))
+};
+
+// ── Load existing config.json (only works when served via HTTP) ──
+(async () => {
+  try {
+    const r = await fetch('config.json?v=' + Date.now());
+    if (r.ok) {
+      const saved = await r.json();
+      // Merge: keep all known types, fill in values from saved
+      const savedMap = {};
+      (saved.links || []).forEach(l => { savedMap[l.type] = l; });
+      config.name       = saved.name       || '';
+      config.profession = saved.profession || '';
+      config.photo      = saved.photo      || '';
+      config.theme      = { ...config.theme,      ...(saved.theme      || {}) };
+      config.colors     = { ...config.colors,     ...(saved.colors     || {}) };
+      config.background = { ...config.background, ...(saved.background || {}) };
+      config.model    = saved.model    || 'classic';
+      config.crm      = saved.crm      || '';
+      config.tagline  = saved.tagline  || '';
+      config.links = config.links.map(l =>
+        savedMap[l.type] ? { ...l, ...savedMap[l.type] } : l
+      );
+      // Add any extra types from saved that aren't in ICON_META
+      (saved.links || []).forEach(l => {
+        if (!ICON_META[l.type] && !config.links.find(x => x.type === l.type)) {
+          config.links.push(l);
+        }
+      });
+    }
+  } catch { /* offline or first use */ }
+  populateForm();
+  renderPreview();
+})();
+
+// ── Populate form from config ──
+function populateForm() {
+  document.getElementById('fName').value       = config.name;
+  document.getElementById('fProfession').value = config.profession;
+  document.getElementById('fCrm').value        = config.crm || '';
+  document.getElementById('fTagline').value    = config.tagline || '';
+  document.getElementById('fPhoto').value      = config.photo;
+
+  // Model
+  const model = config.model || 'classic';
+  document.querySelector(`input[name=modelType][value=${model}]`).checked = true;
+  document.getElementById('taglineField').style.display = model === 'elegant' ? 'block' : 'none';
+
+  const pri = config.theme.primaryColor || '#0d5c2e';
+  const acc = config.theme.accentColor  || '#1eb854';
+  document.getElementById('fPrimary').value    = pri;
+  document.getElementById('fPrimaryHex').value = pri;
+  document.getElementById('fAccent').value     = acc;
+  document.getElementById('fAccentHex').value  = acc;
+
+  // Font colors
+  const c = config.colors || {};
+  setColorPair('fNameColor',   c.nameColor       || '#1a1a1a');
+  setColorPair('fProfColor',   c.professionColor || '#1eb854');
+  setColorPair('fCrmColor',    c.crmColor        || '#999999');
+  setColorPair('fLabelColor',  c.labelColor      || '#555555');
+
+  updatePhotoPreview(config.photo);
+
+  // Background
+  const bgType = config.background?.type || 'gradient';
+  document.querySelector(`input[name=bgType][value=${bgType}]`).checked = true;
+  document.getElementById('bgImageControls').style.display = bgType === 'image' ? 'block' : 'none';
+  document.getElementById('fBgUrl').value = config.background?.type === 'image' && !config.background.imageUrl?.startsWith('data:')
+    ? (config.background.imageUrl || '') : '';
+  const ov = Math.round((config.background?.overlayOpacity ?? 0.45) * 100);
+  document.getElementById('fOverlay').value = ov;
+  document.getElementById('overlayLabel').textContent = ov + '%';
+
+  renderLinksForm();
+}
+
+function setColorPair(id, hex) {
+  const picker = document.getElementById(id);
+  const text   = document.getElementById(id + 'Hex');
+  if (picker) picker.value = hex;
+  if (text)   text.value   = hex;
+}
+
+function renderLinksForm() {
+  const container = document.getElementById('linksContainer');
+  container.innerHTML = '';
+  config.links.forEach((link, i) => {
+    const meta = ICON_META[link.type] || { icon: 'fa-solid fa-link', label: link.type, placeholder: '' };
+    const div = document.createElement('div');
+    div.className = 'link-item' + (link.visible ? ' active' : '');
+    div.dataset.idx = i;
+    div.innerHTML = `
+      <div class="link-item-header">
+        <div class="icon-circle link-icon" style="width:36px;height:36px;font-size:.9rem">
+          <i class="${meta.icon}"></i>
+        </div>
+        <span class="link-name">${meta.label}</span>
+        <label class="toggle">
+          <input type="checkbox" ${link.visible ? 'checked' : ''} data-toggle="${i}">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <input type="text" value="${link.value || ''}" placeholder="${meta.placeholder}"
+             data-value="${i}" style="width:100%;padding:9px 11px;border:1.5px solid var(--border);
+             border-radius:8px;font-size:.88rem;outline:none;background:#fafbfc"
+             ${link.visible ? '' : 'disabled'}>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// ── Sync form → config → preview ──
+function collectConfig() {
+  config.name       = document.getElementById('fName').value.trim();
+  config.profession = document.getElementById('fProfession').value.trim();
+  config.crm        = document.getElementById('fCrm').value.trim();
+  config.tagline    = document.getElementById('fTagline').value.trim();
+  config.model      = document.querySelector('input[name=modelType]:checked')?.value || 'classic';
+  config.photo      = document.getElementById('fPhoto').value.trim();
+  config.theme.primaryColor = document.getElementById('fPrimaryHex').value.trim();
+  config.theme.accentColor  = document.getElementById('fAccentHex').value.trim();
+
+  config.colors = {
+    nameColor:       document.getElementById('fNameColorHex').value.trim(),
+    professionColor: document.getElementById('fProfColorHex').value.trim(),
+    crmColor:        document.getElementById('fCrmColorHex').value.trim(),
+    labelColor:      document.getElementById('fLabelColorHex').value.trim(),
+  };
+
+  const bgType = document.querySelector('input[name=bgType]:checked')?.value || 'gradient';
+  config.background.type           = bgType;
+  config.background.overlayOpacity = +(document.getElementById('fOverlay').value) / 100;
+  if (bgType !== 'image') config.background.imageUrl = '';
+  else if (!config.background.imageUrl?.startsWith('data:')) {
+    config.background.imageUrl = document.getElementById('fBgUrl').value.trim();
+  }
+
+  document.querySelectorAll('[data-value]').forEach(inp => {
+    config.links[+inp.dataset.value].value = inp.value.trim();
+  });
+  document.querySelectorAll('[data-toggle]').forEach(chk => {
+    config.links[+chk.dataset.toggle].visible = chk.checked;
+  });
+}
+
+// ── Live preview ──
+function renderPreview() {
+  collectConfig();
+  const pri = config.theme.primaryColor || '#0d5c2e';
+  const acc = config.theme.accentColor  || '#1eb854';
+  const bg  = config.background || {};
+  const isBgImage = bg.type === 'image' && bg.imageUrl;
+  const model = config.model || 'classic';
+
+  const card = document.getElementById('previewCard');
+  card.className = 'card' + (isBgImage ? ' bg-full-image' : '') + (model === 'elegant' ? ' model-elegant' : '');
+
+  if (model === 'elegant') renderPreviewElegant(card, pri, acc);
+  else                     renderPreviewClassic(card, pri, acc);
+
+  // Apply theme CSS vars
+  card.style.setProperty('--primary', pri);
+  card.style.setProperty('--accent',  acc);
+  const c = config.colors || {};
+  card.style.setProperty('--name-color',       c.nameColor       || '#1a1a1a');
+  card.style.setProperty('--profession-color',  c.professionColor || acc);
+  card.style.setProperty('--crm-color',         c.crmColor        || '#999');
+  card.style.setProperty('--label-color',       c.labelColor      || '#555');
+
+  if (isBgImage) {
+    const opacity = bg.overlayOpacity ?? 0.45;
+    card.style.setProperty('--bg-image', `url("${bg.imageUrl}")`);
+    card.style.setProperty('--bg-overlay-color',
+      `linear-gradient(rgba(0,0,0,${opacity}),rgba(0,0,0,${opacity}))`);
+  } else {
+    card.style.removeProperty('--bg-image');
+    card.style.removeProperty('--bg-overlay-color');
+  }
+
+  // Update link items active state
+  document.querySelectorAll('.link-item').forEach(el => {
+    const idx = +el.dataset.idx;
+    el.classList.toggle('active', config.links[idx]?.visible);
+    const inp = el.querySelector('[data-value]');
+    if (inp) inp.disabled = !config.links[idx]?.visible;
+  });
+}
+
+function renderPreviewClassic(card, pri, acc) {
+  const visibleLinks = config.links.filter(l => l.visible && l.value);
+  const iconsHtml = visibleLinks.map(link => {
+    const meta = ICON_META[link.type] || { icon: 'fa-solid fa-link', label: link.type };
+    const href = (ICON_HREF[link.type] || (v => v))(link.value);
+    return `<a href="${href}" class="icon-btn" onclick="return false">
+      <span class="icon-circle"><i class="${meta.icon}"></i></span>
+      <span class="icon-label">${link.label}</span>
+    </a>`;
+  }).join('');
+
+  const photoHtml = config.photo
+    ? `<img src="${config.photo}" alt="Foto" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">`
+    : '';
+  const placeholderHtml = `<div class="photo-placeholder" style="${config.photo ? 'display:none' : ''}"><i class="fa-solid fa-user"></i></div>`;
+
+  card.innerHTML = `
+    <div class="card-header" style="--primary:${pri};--accent:${acc}">
+      <p class="card-logo">Cartão Interativo Digital</p>
+      <div class="photo-wrap">${photoHtml}${placeholderHtml}</div>
+    </div>
+    <div class="card-identity">
+      <h1 class="card-name">${config.name || 'Seu Nome'}</h1>
+      <p class="card-profession">${config.profession || 'Sua Profissão'}</p>
+      ${config.crm ? `<p class="card-crm">${config.crm}</p>` : ''}
+    </div>
+    <div class="divider"></div>
+    <div class="icons-grid" style="--primary:${pri};--accent:${acc}">${iconsHtml}</div>
+    <div class="card-actions">
+      <button class="btn-action primary" style="--primary:${pri};--accent:${acc};cursor:default" onclick="return false">
+        <i class="fa-solid fa-address-card"></i> Salvar Contato
+      </button>
+    </div>
+    <div class="card-footer" style="background:${pri}">Toque nos ícones para interagir</div>
+  `;
+}
+
+function renderPreviewElegant(card, pri, acc) {
+  const visibleLinks = config.links.filter(l => l.visible && l.value);
+  const buttonsHtml = visibleLinks.map(link => {
+    const meta = ICON_META[link.type] || { icon: 'fa-solid fa-link', label: link.type };
+    const href = (ICON_HREF[link.type] || (v => v))(link.value);
+    const isCta = CTA_TYPES.has(link.type);
+    return `<a href="${href}" class="btn-elegant${isCta ? ' cta' : ''}" onclick="return false">
+      <i class="${meta.icon}"></i> ${link.label}
+    </a>`;
+  }).join('');
+
+  const photoContent = config.photo
+    ? `<img src="${config.photo}" alt="Foto" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`
+    : `<div class="eg-photo-placeholder"><i class="fa-solid fa-user"></i></div>`;
+
+  card.innerHTML = `
+    <div class="eg-header">
+      <div class="eg-logo"><i class="fa-solid fa-spa"></i></div>
+      <div class="eg-identity">
+        <h1 class="card-name">${config.name || 'Seu Nome'}</h1>
+        <p class="card-profession">${config.profession || 'Sua Profissão'}</p>
+        ${config.crm ? `<p class="card-crm">${config.crm}</p>` : ''}
+      </div>
+    </div>
+    <div class="eg-photo-section">
+      <div class="eg-watermark"><i class="fa-solid fa-spa"></i></div>
+      <div class="eg-photo-ring">${photoContent}</div>
+    </div>
+    ${config.tagline ? `<p class="eg-tagline">${config.tagline}</p>` : ''}
+    <div class="eg-buttons">
+      ${buttonsHtml}
+      <button class="btn-elegant" style="cursor:default" onclick="return false">
+        <i class="fa-solid fa-address-card"></i> Salvar Contato
+      </button>
+    </div>
+  `;
+}
+
+// ── Event listeners ──
+
+// Model selector
+document.querySelectorAll('input[name=modelType]').forEach(r => r.addEventListener('change', () => {
+  document.getElementById('taglineField').style.display = r.value === 'elegant' ? 'block' : 'none';
+  renderPreview();
+}));
+
+document.getElementById('fName').addEventListener('input', renderPreview);
+document.getElementById('fProfession').addEventListener('input', renderPreview);
+document.getElementById('fCrm').addEventListener('input', renderPreview);
+document.getElementById('fTagline').addEventListener('input', renderPreview);
+
+// Font color pickers (bidirectional)
+['fNameColor','fProfColor','fCrmColor','fLabelColor'].forEach(id => {
+  const picker = document.getElementById(id);
+  const hex    = document.getElementById(id + 'Hex');
+  picker.addEventListener('input', () => { hex.value = picker.value; renderPreview(); });
+  hex.addEventListener('input', () => {
+    if (/^#[0-9a-fA-F]{6}$/.test(hex.value)) { picker.value = hex.value; renderPreview(); }
+  });
+});
+document.getElementById('fPhoto').addEventListener('input', e => {
+  updatePhotoPreview(e.target.value);
+  renderPreview();
+});
+
+// Color pickers (bidirectional sync)
+['Primary','Accent'].forEach(key => {
+  const picker = document.getElementById(`f${key}`);
+  const hex    = document.getElementById(`f${key}Hex`);
+  picker.addEventListener('input', () => { hex.value = picker.value; renderPreview(); });
+  hex.addEventListener('input', () => {
+    if (/^#[0-9a-fA-F]{6}$/.test(hex.value)) { picker.value = hex.value; renderPreview(); }
+  });
+});
+
+// Background type toggle
+document.querySelectorAll('input[name=bgType]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const isImage = radio.value === 'image';
+    document.getElementById('bgImageControls').style.display = isImage ? 'block' : 'none';
+    if (!isImage) config.background.imageUrl = '';
+    renderPreview();
+  });
+});
+
+// Background URL field
+document.getElementById('fBgUrl').addEventListener('input', e => {
+  config.background.imageUrl = e.target.value.trim();
+  renderPreview();
+});
+
+// Overlay slider
+document.getElementById('fOverlay').addEventListener('input', e => {
+  document.getElementById('overlayLabel').textContent = e.target.value + '%';
+  renderPreview();
+});
+
+// Background image file upload → base64
+document.getElementById('bgFile').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    config.background.imageUrl = ev.target.result;
+    document.getElementById('fBgUrl').value = '(imagem incorporada)';
+    renderPreview();
+  };
+  reader.readAsDataURL(file);
+});
+
+// Links (delegated)
+document.getElementById('linksContainer').addEventListener('input', renderPreview);
+document.getElementById('linksContainer').addEventListener('change', renderPreview);
+
+// Photo file upload → base64
+document.getElementById('photoFile').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const data = ev.target.result;
+    config.photo = data;
+    document.getElementById('fPhoto').value = '(foto incorporada)';
+    updatePhotoPreview(data);
+    renderPreview();
+  };
+  reader.readAsDataURL(file);
+});
+
+function updatePhotoPreview(src) {
+  const wrap = document.getElementById('photoPreview');
+  if (!src || src === '(foto incorporada)' && !config.photo.startsWith('data:')) {
+    wrap.innerHTML = '<i class="fa-solid fa-user"></i>';
+    return;
+  }
+  const actualSrc = src === '(foto incorporada)' ? config.photo : src;
+  wrap.innerHTML = `<img src="${actualSrc}" alt="Foto" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-user\\'></i>'">`;
+}
+
+// ── Export ──
+document.getElementById('btnExport').addEventListener('click', () => {
+  collectConfig();
+  const json = JSON.stringify(config, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = 'config.json';
+  a.click();
+  showToast('✅ config.json exportado! Suba o arquivo no GitHub para atualizar o cartão.');
+});
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>

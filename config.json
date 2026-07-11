@@ -1,0 +1,35 @@
+{
+  "name": "Seu Nome",
+  "profession": "Sua Profissão",
+  "crm": "",
+  "tagline": "",
+  "model": "classic",
+  "photo": "assets/foto.jpg",
+  "theme": {
+    "primaryColor": "#0d5c2e",
+    "accentColor": "#1eb854",
+    "textColor": "#ffffff"
+  },
+  "colors": {
+    "nameColor": "",
+    "professionColor": "",
+    "crmColor": "",
+    "labelColor": ""
+  },
+  "background": {
+    "type": "gradient",
+    "imageUrl": ""
+  },
+  "links": [
+    { "type": "whatsapp", "label": "WhatsApp",  "value": "+5511999999999", "visible": true },
+    { "type": "phone",    "label": "Telefone",  "value": "+5511999999999", "visible": true },
+    { "type": "location", "label": "Endereço",  "value": "Rua X, 100, São Paulo SP", "visible": true },
+    { "type": "email",    "label": "E-mail",    "value": "voce@email.com", "visible": true },
+    { "type": "website",  "label": "Site",      "value": "https://seusite.com.br", "visible": false },
+    { "type": "instagram","label": "Instagram", "value": "seuusuario", "visible": true },
+    { "type": "linkedin", "label": "LinkedIn",  "value": "https://linkedin.com/in/seuusuario", "visible": false },
+    { "type": "facebook", "label": "Facebook",  "value": "https://facebook.com/seuusuario", "visible": false },
+    { "type": "youtube",  "label": "YouTube",   "value": "https://youtube.com/@seucanal", "visible": false },
+    { "type": "tiktok",   "label": "TikTok",    "value": "seuusuario", "visible": false }
+  ]
+}
