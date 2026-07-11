@@ -640,16 +640,54 @@ function updatePhotoPreview(src) {
 }
 
 // ── Export ──
-document.getElementById('btnExport').addEventListener('click', () => {
+document.getElementById('btnExport').addEventListener('click', async () => {
   collectConfig();
+
+  // 1. Download config.json
   const json = JSON.stringify(config, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-  const a    = document.createElement('a');
-  a.href     = URL.createObjectURL(blob);
-  a.download = 'config.json';
-  a.click();
-  showToast('✅ config.json baixado! Agora substitua esse arquivo no GitHub para atualizar o cartão.');
+  download('config.json', json, 'application/json');
+
+  // 2. Fetch index.html, inject updated OG tags, download it too
+  try {
+    const baseUrl = location.hostname === 'localhost' || location.protocol === 'file:'
+      ? 'index.html' : 'index.html';
+    let html = await fetch(baseUrl + '?v=' + Date.now()).then(r => r.text());
+
+    const siteUrl = (() => {
+      try { return new URL('/', location.href).href.replace(/\/$/, ''); } catch { return ''; }
+    })();
+    const photoUrl = config.photo?.startsWith('data:')
+      ? (siteUrl + '/foto.jpg')          // base64 → assume uploaded as foto.jpg
+      : (config.photo || siteUrl + '/foto.jpg');
+
+    const ogTitle = `${config.name}${config.profession ? ' · ' + config.profession : ''}`;
+    const ogDesc  = `Olá! Toque para ver meu cartão de visita interativo — WhatsApp, e-mail, redes sociais e mais em um só lugar.`;
+
+    // Replace OG tags block between the markers
+    html = html
+      .replace(/<meta property="og:title"[^>]*>/,       `<meta property="og:title"       content="${ogTitle}">`)
+      .replace(/<meta property="og:description"[^>]*>/, `<meta property="og:description" content="${ogDesc}">`)
+      .replace(/<meta property="og:image"[^>]*>/,       `<meta property="og:image"       content="${photoUrl}">`)
+      .replace(/<meta property="og:url"[^>]*>/,         `<meta property="og:url"         content="${siteUrl}/">`)
+      .replace(/<meta name="theme-color"[^>]*>/,        `<meta name="theme-color" content="${config.theme?.primaryColor || '#0d5c2e'}">`)
+      .replace(/<meta name="description"[^>]*>/,        `<meta name="description" content="Cartão de visita digital de ${config.name}${config.profession ? ' - ' + config.profession : ''}">`)
+      .replace(/<title>[^<]*<\/title>/,                 `<title>${ogTitle}</title>`);
+
+    await new Promise(r => setTimeout(r, 400)); // small gap between downloads
+    download('index.html', html, 'text/html');
+
+    showToast('✅ 2 arquivos baixados! Suba config.json e index.html no GitHub.');
+  } catch {
+    showToast('✅ config.json baixado! Suba no GitHub para atualizar o cartão.');
+  }
 });
+
+function download(filename, content, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type }));
+  a.download = filename;
+  a.click();
+}
 
 function showToast(msg) {
   const t = document.getElementById('toast');
