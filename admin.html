@@ -267,35 +267,42 @@ let config = {
   }))
 };
 
-// ── Load existing config.json (only works when served via HTTP) ──
+// ── Merge saved data into config ──
+function mergeConfig(saved) {
+  const savedMap = {};
+  (saved.links || []).forEach(l => { savedMap[l.type] = l; });
+  config.name       = saved.name       || '';
+  config.profession = saved.profession || '';
+  config.photo      = saved.photo      || '';
+  config.theme      = { ...config.theme,      ...(saved.theme      || {}) };
+  config.colors     = { ...config.colors,     ...(saved.colors     || {}) };
+  config.background = { ...config.background, ...(saved.background || {}) };
+  config.model   = saved.model   || 'classic';
+  config.crm     = saved.crm     || '';
+  config.tagline = saved.tagline || '';
+  config.links = config.links.map(l =>
+    savedMap[l.type] ? { ...l, ...savedMap[l.type] } : l
+  );
+  (saved.links || []).forEach(l => {
+    if (!ICON_META[l.type] && !config.links.find(x => x.type === l.type))
+      config.links.push(l);
+  });
+}
+
+// ── Load: localStorage first (preserves between sessions), then config.json ──
 (async () => {
+  const local = localStorage.getItem('cartao_config');
+  if (local) {
+    try { mergeConfig(JSON.parse(local)); } catch {}
+  }
   try {
     const r = await fetch('config.json?v=' + Date.now());
     if (r.ok) {
       const saved = await r.json();
-      // Merge: keep all known types, fill in values from saved
-      const savedMap = {};
-      (saved.links || []).forEach(l => { savedMap[l.type] = l; });
-      config.name       = saved.name       || '';
-      config.profession = saved.profession || '';
-      config.photo      = saved.photo      || '';
-      config.theme      = { ...config.theme,      ...(saved.theme      || {}) };
-      config.colors     = { ...config.colors,     ...(saved.colors     || {}) };
-      config.background = { ...config.background, ...(saved.background || {}) };
-      config.model    = saved.model    || 'classic';
-      config.crm      = saved.crm      || '';
-      config.tagline  = saved.tagline  || '';
-      config.links = config.links.map(l =>
-        savedMap[l.type] ? { ...l, ...savedMap[l.type] } : l
-      );
-      // Add any extra types from saved that aren't in ICON_META
-      (saved.links || []).forEach(l => {
-        if (!ICON_META[l.type] && !config.links.find(x => x.type === l.type)) {
-          config.links.push(l);
-        }
-      });
+      // Only use config.json if localStorage is empty or config.json has real data
+      if (!local || saved.name) mergeConfig(saved);
     }
-  } catch { /* offline or first use */ }
+  } catch { /* offline or file:// */ }
   populateForm();
   renderPreview();
 })();
@@ -414,6 +421,8 @@ function collectConfig() {
 // ── Live preview ──
 function renderPreview() {
   collectConfig();
+  // Auto-save to localStorage so data persists if browser is closed
+  localStorage.setItem('cartao_config', JSON.stringify(config));
   const pri = config.theme.primaryColor || '#0d5c2e';
   const acc = config.theme.accentColor  || '#1eb854';
   const bg  = config.background || {};
@@ -639,7 +648,7 @@ document.getElementById('btnExport').addEventListener('click', () => {
   a.href     = URL.createObjectURL(blob);
   a.download = 'config.json';
   a.click();
-  showToast('✅ config.json exportado! Suba o arquivo no GitHub para atualizar o cartão.');
+  showToast('✅ config.json baixado! Agora substitua esse arquivo no GitHub para atualizar o cartão.');
 });
 
 function showToast(msg) {
