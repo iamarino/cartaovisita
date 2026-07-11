@@ -4,7 +4,7 @@
   "crm": "",
   "tagline": "",
   "model": "classic",
-  "photo": "assets/foto.jpg",
+  "photo": "foto.jpg",
   "theme": {
     "primaryColor": "#0d5c2e",
     "accentColor": "#1eb854",
