@@ -1,35 +1,86 @@
 {
-  "name": "Seu Nome",
-  "profession": "Sua Profissão",
-  "crm": "",
+  "name": "Shirley Iamarino",
+  "profession": "Psicologa",
+  "crm": "CRM:123456",
   "tagline": "",
   "model": "classic",
-  "photo": "foto.jpg",
+  "photo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHgp-Ky2cEYtRePFDIRi3xJVhgVuWmMktuPup5SAJqjg&s=10",
   "theme": {
-    "primaryColor": "#0d5c2e",
-    "accentColor": "#1eb854",
+    "primaryColor": "#ff5757",
+    "accentColor": "#ff5757",
     "textColor": "#ffffff"
   },
   "colors": {
-    "nameColor": "",
-    "professionColor": "",
-    "crmColor": "",
-    "labelColor": ""
+    "nameColor": "#1a1a1a",
+    "professionColor": "#1eb854",
+    "crmColor": "#999999",
+    "labelColor": "#555555"
   },
   "background": {
     "type": "gradient",
-    "imageUrl": ""
+    "imageUrl": "",
+    "overlayOpacity": 0.44
   },
   "links": [
-    { "type": "whatsapp", "label": "WhatsApp",  "value": "+5511999999999", "visible": true },
-    { "type": "phone",    "label": "Telefone",  "value": "+5511999999999", "visible": true },
-    { "type": "location", "label": "Endereço",  "value": "Rua X, 100, São Paulo SP", "visible": true },
-    { "type": "email",    "label": "E-mail",    "value": "voce@email.com", "visible": true },
-    { "type": "website",  "label": "Site",      "value": "https://seusite.com.br", "visible": false },
-    { "type": "instagram","label": "Instagram", "value": "seuusuario", "visible": true },
-    { "type": "linkedin", "label": "LinkedIn",  "value": "https://linkedin.com/in/seuusuario", "visible": false },
-    { "type": "facebook", "label": "Facebook",  "value": "https://facebook.com/seuusuario", "visible": false },
-    { "type": "youtube",  "label": "YouTube",   "value": "https://youtube.com/@seucanal", "visible": false },
-    { "type": "tiktok",   "label": "TikTok",    "value": "seuusuario", "visible": false }
+    {
+      "type": "whatsapp",
+      "label": "WhatsApp",
+      "value": "48988543000",
+      "visible": true
+    },
+    {
+      "type": "phone",
+      "label": "Telefone",
+      "value": "",
+      "visible": true
+    },
+    {
+      "type": "location",
+      "label": "Endereço",
+      "value": "",
+      "visible": false
+    },
+    {
+      "type": "email",
+      "label": "E-mail",
+      "value": "a@wplex",
+      "visible": true
+    },
+    {
+      "type": "website",
+      "label": "Site",
+      "value": "",
+      "visible": false
+    },
+    {
+      "type": "instagram",
+      "label": "Instagram",
+      "value": "oi",
+      "visible": true
+    },
+    {
+      "type": "linkedin",
+      "label": "LinkedIn",
+      "value": "",
+      "visible": false
+    },
+    {
+      "type": "facebook",
+      "label": "Facebook",
+      "value": "",
+      "visible": false
+    },
+    {
+      "type": "youtube",
+      "label": "YouTube",
+      "value": "",
+      "visible": false
+    },
+    {
+      "type": "tiktok",
+      "label": "TikTok",
+      "value": "",
+      "visible": false
+    }
   ]
 }
